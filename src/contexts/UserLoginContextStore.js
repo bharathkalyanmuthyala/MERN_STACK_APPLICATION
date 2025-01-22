@@ -12,6 +12,7 @@ function UserLoginContextStore({children}) {
     const loginUser=(userCredObj)=>{
         axios.post('http://localhost:4000/user-api/login-user',userCredObj)
         .then(response=>{
+            //console.log(response)
             if(response.data.message==="success"){
                 //update current User state
                 setCurrentUser({...response.data.user})
@@ -27,7 +28,7 @@ function UserLoginContextStore({children}) {
             }
         })
         .catch(err=>{
-
+            console.log(err)
         })
     }
 

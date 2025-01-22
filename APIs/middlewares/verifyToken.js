@@ -15,7 +15,7 @@ const verifyToken = (request, response, next) => {
     const token = bearerToken.split(" ")[1];
     //verify token using secret key
     try {
-      jwt.verify(token, process.env.SECRET_KEY);
+      jwt.verify(token,"abcdef");
       next();
     } catch (err) {
       response.send({ message: err.message });

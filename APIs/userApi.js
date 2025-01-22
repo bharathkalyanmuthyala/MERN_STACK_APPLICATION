@@ -26,8 +26,9 @@ userApp.use(exp.json())
 //PUBLIC ROUTE
 userApp.post("/register-user",multerObj.single('photo'),expressAsyncHandler(async(request,response)=>{
 
+
   //get user collection
-  const userCollectionObj=request.app.get("userCollection")
+  const userCollectionObj=request.app.get("usersCollection")
 
   //get user from client
   const newUser=JSON.parse(request.body.user);
@@ -63,7 +64,7 @@ userApp.get("/get-user/:username",verifyToken,expressAsyncHandler(async(request,
 
   console.log(request.headers)
      //get user collection
-    const userCollectionObj=request.app.get("userCollection")
+    const userCollectionObj=request.app.get("usersCollection")
 
     //get username from url
     let usernameOfUrl=request.params.username;
@@ -83,7 +84,7 @@ userApp.get("/get-user/:username",verifyToken,expressAsyncHandler(async(request,
 userApp.delete("/remove-user/:username",verifyToken,expressAsyncHandler(async(request,response)=>{
 
        //get user collection
-       const userCollectionObj=request.app.get("userCollection")
+       const userCollectionObj=request.app.get("usersCollection")
 
        //get username from url
        let usernameOfUrl=request.params.username;
@@ -101,7 +102,7 @@ userApp.delete("/remove-user/:username",verifyToken,expressAsyncHandler(async(re
 userApp.post('/login-user',expressAsyncHandler(async(request,response)=>{
 
   //get user collection
-  const userCollectionObj=request.app.get("userCollection")
+  const userCollectionObj=request.app.get("usersCollection")
 
   //get user from client
   const userCredentialsObj=request.body;
@@ -124,7 +125,7 @@ userApp.post('/login-user',expressAsyncHandler(async(request,response)=>{
     //passwords are matched
     else{
       //create JWT token
-      let signedJWTToken=jwt.sign({username:userOfDB.username},process.env.SECRET_KEY,{expiresIn:"1d"})
+      let signedJWTToken=jwt.sign({username:userOfDB.username},"abcdef",{expiresIn:"1d"})
       //send token in response
       response.status(200).send({message:"success",token:signedJWTToken,user:userOfDB})
     }

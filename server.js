@@ -3,8 +3,8 @@ const exp = require("express");
 const app = exp();
 require('dotenv').config()
 //assign port numnrt
-const port=process.env.PORT||4000;
-app.listen(port, () => console.log("server listening on port 4000..."));
+const port=process.env.PORT || 4000;
+app.listen(4000, () => console.log("server listening on port 4000..."));
 
 
 
@@ -15,25 +15,36 @@ app.use(exp.static(path.join(__dirname,'./build')))
 //Get mongo client
 const mclient=require("mongodb").MongoClient;
 
-//connect to MongoDB server
-mclient.connect('mongodb://localhost:27017/demodb')
-.then(dbRef=>{
-  //get database obj
-  let dbObj=dbRef.db('demodb')
-  //create collection objects
-  let userCollection=dbObj.collection("userscollection")
-  let productCollection=dbObj.collection("productscollection")
+async function connectToDatabase() {
+  try {
+    // Connect to MongoDB
+    const client = await mclient.connect(process.env.DATABASE_URL);
+    const db = client.db("demodb");
 
-  //share collections objects to APIs
-  app.set("userCollection",userCollection)
-  app.set("productCollection",productCollection)
+    // Create collections if they don't exist
+    const collections = ['usersCollection', 'productsCollections'];
+    
+    for (const collectionName of collections) {
+      const exists = await db.listCollections({ name: collectionName }).hasNext();
+      if (!exists) {
+        await db.createCollection(collectionName);
+        console.log(`${collectionName} collection created`);
+      }
+    }
 
-  console.log("Connected to DB successfully")
-})
-.catch(err=>console.log("database connection err is ",err))
+    // Set collections to app
+    app.set('usersCollection', db.collection('users'));
+    app.set('productsCollection', db.collection('products'));
 
+    console.log('Connected to database successfully');
+    
+  } catch (error) {
+    console.log('Database connection error:', error);
+  }
+}
 
-
+// Call the function
+connectToDatabase();
 
 //import userApp and productApp
 const userApp = require("./APIs/userApi");

@@ -9,7 +9,7 @@ function UserProfile() {
   let [err, setErr] = useState("");
   let [data, setData] = useState("");
 
-console.log(currentUser)
+
 
   //get data from protected route
   const getProtectedData = () => {

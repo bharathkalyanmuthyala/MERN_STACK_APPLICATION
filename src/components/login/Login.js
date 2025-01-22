@@ -1,4 +1,4 @@
-import React,{useState,useContext,useEffect} from 'react'
+import React,{useContext,useEffect} from 'react'
 import './Login.css'
 import {useForm} from 'react-hook-form'
 import {useNavigate} from 'react-router-dom'
@@ -9,8 +9,7 @@ function Login() {
 
   let [currentUser,error,userLoginStatus,loginUser,logoutUser]=useContext(loginContext)
 
-   //error state
-  // let [err, setErr] = useState("");
+  
 
    //navigate
    const navigate = useNavigate();
@@ -25,13 +24,13 @@ function Login() {
 
    //user login
    const handleUserLogin=(userCredObj)=>{
-  //  console.log(userCredObj)
+   //console.log(userCredObj)
     loginUser(userCredObj)
    }
 
 
    useEffect(()=>{
-    if(userLoginStatus==true){
+    if(userLoginStatus===true){
       navigate("/user-profile")
     }
    },[userLoginStatus])
@@ -42,7 +41,7 @@ function Login() {
     <div className="add-user mt-5">
      
       {/* form submission error */}
-      {error.length !== 0 && (
+      {error && error.length!=0 && (
         <p className="display-3 text-danger text-center">{error}</p>
       )}
       {/* add user form */}

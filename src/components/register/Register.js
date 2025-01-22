@@ -29,39 +29,27 @@ function Register() {
     fd.append("user",JSON.stringify(newUser))
     //append selected file to form data
     fd.append("photo",selectedFile)
-
+    
     axios
-      .post("http://localhost:4000/user-api/register-user", fd)
-      .then((response) => {
-        
-        if (response.status === 201) {
-          //naviagte to login componentxp
-          navigate('/login')
-        }
-        if(response.status!==201){
-          setError(response.data.message)
-        }
-      })
-      .catch((err) => {
-        //  console.log("err is ",err)
-        //the client was given an error response (5xx,4xx)
-        if (err.response) {
-          setError(err.message);
-        }
-        //the client never received a response
-        else if (err.request) {
-          setError(err.message);
-        }
-        //for other error
-        else {
-          setError(err.message);
-        }
-      });
+  .post("http://localhost:4000/user-api/register-user", fd)
+  .then((response) => {
+    if (response.status === 201) {
+      navigate('/login');
+    } else {
+      setError(response.data?.message || "Unexpected error occurred.");
+    }
+  })
+  .catch((err) => {
+    setError(err.response?.data?.message || err.message || "An error occurred.");
+  });
+
+    
   };
 
 
  //on file select
  const onFileSelect=(e)=>{
+  
   setSelectedFile(e.target.files[0])
  }
 
@@ -70,7 +58,7 @@ function Register() {
     <div className="add-user">
       <p className="display-3 text-center">Add New User</p>
       {/* form submission error */}
-      {error.length !== 0 && (
+      {error && error.length!=0 && (
         <p className="display-3 text-danger text-center">{error}</p>
       )}
       {/* add user form */}
